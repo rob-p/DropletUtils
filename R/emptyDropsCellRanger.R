@@ -79,11 +79,16 @@
 #' my.counts <- DropletUtils:::simCounts()
 #' 
 #' # Identify likely cell-containing droplets.
-#' e.out <- emptyDropsCellRanger(my.counts)
-#' e.out
-#' 
-#' # Get matrix of estimated barcodes.
-#' cell.counts <- my.counts[, e.out$is.cell]
+#' out <- emptyDropsCellRanger(my.counts)
+#' out
+#'
+#' is.cell <- out$FDR <= 0.01
+#' sum(is.cell, na.rm=TRUE)
+#'
+#' # Subsetting the matrix to the cell-containing droplets.
+#' # (using 'which()' to handle NAs smoothly).
+#' cell.counts <- my.counts[,which(is.cell),drop=FALSE]
+#' dim(cell.counts)
 #' 
 #' @references
 #' Kaminow et al. (2021).
