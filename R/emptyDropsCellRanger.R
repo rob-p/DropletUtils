@@ -18,7 +18,7 @@
 #' @param BPPARAM A \linkS4class{BiocParallelParam} object indicating whether parallelization should be used.
 #'
 #' @section Details about \code{emptyDropsCellRanger} arguments:
-#' The arguments in \pkg{STARsolo} are one-to-one correspond to the arguments in \code{emptyDropsCellRanger}:
+#' The arguments in \pkg{STARsolo} are one-to-one correspond to the arguments in \code{emptyDropsCellRanger}. All parameters defaults are set as the same as those used in STARsolo 2.7.9a.
 #' \itemize{
 #' \item \code{n.expected.cells}: This argument is used to define the number of expected cells in a sample. 
 #' It is the same as \code{nExpectedCells} in \pkg{STARsolo}. 
@@ -34,7 +34,7 @@
 #' This argument defines the minimum UMI as \code{umi.min.frac.median} times the median UMI count of the real cells assigned by the simple filtering algorithm. 
 #' This argument is the same as \code{umiMinFracMedian} in \pkg{STARsolo}.
 #' \item \code{cand.max.n}: This argument is one of the three thresholds used to define the lower bound of the cell candidate pool. 
-#' This argument defines the minimum UMI as the UMI count of the barcodes whose UMI count ranks as the \code{cand.max.n}-th after the real cells defined by the simple filtering algorithm. 
+#' This argument defines the minimum UMI as the UMI count of the barcodes whose UMI count ranks as the \code{cand.max.n}-th behind the real cells defined by the simple filtering algorithm. 
 #' This argument is the same as \code{umiMinFracMedian} in \pkg{STARsolo}.
 #' \item \code{ind.min}: This argument specifies the lowest UMI count ranking of the barcodes in the ambient pool. 
 #' This argument is same as \code{indMin} in \pkg{STARsolo}.
