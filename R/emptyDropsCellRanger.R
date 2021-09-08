@@ -4,55 +4,62 @@
 #' which, itself, was reverse-engineered from the behavior of CellRanger 3+.
 #' 
 #' @param m A numeric matrix-like object containing counts, where columns represent barcoded droplets and rows represent features.
-#' The matrix should only contain barcodes for an individual sample, prior to any filtering for barcodes.
+#' The matrix should only contain barcodes for an individual sample, prior to any filtering of barcodes.
 #' 
-#' @param expected A numeric scalar specifying the expected number of barcodes in this sample It is same as \code{nExpectedCells} in STARsolo.
+#' @param expected A numeric scalar specifying the expected number of barcodes in this sample. This parmeter is the same as \code{nExpectedCells} in STARsolo.
 #' 
-#' @param max.percentile A numeric scalar specifying the percentile used in simple filtering, barcodes selected by simple filtering 
-#' will be regarded as real barcodes regardless of the \code{emptyDrops} result. It is same as \code{maxPercentile} in STARsolo.
+#' @param max.percentile A numeric scalar specifying the percentile used in simple filtering. Barcodes selected by simple filtering 
+#' will be regarded as real barcodes regardless of the \code{emptyDrops} result. This parameter is the same as \code{maxPercentile} in STARsolo.
 #' 
-#' @param max.min.ratio A numeric scalar specifying the maximum ratio of maximum UMI count and minimum UMI count used in simple filtering, 
-#' maximum UMI count used in simple filtering is determined first by \code{expected*(1-max.percentile)}, minimum UMI count used in
-#'  simple filtering is then determined by this ratio. It is same as \code{maxMinRatio} in STARsolo.
+#' @param max.min.ratio A numeric scalar specifying the maximum ratio of maximum UMI count and minimum UMI count used in simple filtering. 
+#' The maximum UMI count used in simple filtering is determined first by computing \code{expected*(1-max.percentile)}, the minimum UMI count used in
+#' simple filtering is then determined by this ratio. This parameter is the same as \code{maxMinRatio} in STARsolo.
 #'  
-#' @param umi.min A numeric scalar specifying the minimum UMI count above which a sample will be included in ambient profiles. It is same as \code{umiMin} in STARsolo.
+#' @param umi.min A numeric scalar specifying the minimum UMI count above which a sample will be included in ambient profiles. 
+#' This parameter is the same as \code{umiMin} in STARsolo.
 #' 
-#' @param umi.min.frac.median A numeric scalar between 0 and 1 specifying that only the barcodes whose UMI count are above this number 
+#' @param umi.min.frac.median A numeric scalar between 0 and 1 specifying that only the barcodes whose UMI count are above this 
 #' fraction of the median UMI count of the top \code{expected} barcodes will be included in the ambient profile. 
-#' It is same as \code{umiMinFracMedian} in STARsolo.
+#' This parameter is same as \code{umiMinFracMedian} in STARsolo.
 #' 
-#' @param cand.max.n An integer specifying the maximum number of ambient barcodes that are possible to be regarded as real barcodes. It is same as \code{canMaxN} in STARsolo.
+#' @param cand.max.n An integer specifying the maximum number of ambient barcodes that can possibly be regarded as real barcodes. 
+#' This parameter is same as \code{canMaxN} in STARsolo.
 #' 
-#' @param ind.min An integer specifying the lowest UMI count ranking of the ambient pool, barcodes with UMI count ranking below
-#' this number will not be included in the ambient pool. It is same as \code{indMin} in STARsolo. It is also same as \code{by.rank} in \code{emptyDrops}.
-
-#' @param ind.max An integer specifying the highest UMI count ranking of the ambient pool, barcodes with UMI count ranking above
-#' this number will not be included in the ambient pool. It is same as \code{indMax} in STARsolo.
+#' @param ind.min An integer specifying the lowest UMI count ranking of the ambient pool. Barcodes with UMI count ranking below
+#' this number will not be included in the ambient pool. This parameter is the same as \code{indMin} in STARsolo. 
+#' It is also same as \code{by.rank} in \code{emptyDrops}.
 #' 
-#' @param fdr A numeric scalar specifying the FDR threshold to filter barcodes. Barcodes whose FDR returned by emptyDrops
-#' is above this threshold will not be regarded as real barcodes. It is same as \code{FDR} in STARsolo.
+#' @param ind.max An integer specifying the highest UMI count ranking of the ambient pool. Barcodes with UMI count ranking above
+#' this number will not be included in the ambient pool. This parameter is the same as \code{indMax} in STARsolo.
+#' 
+#' @param fdr A numeric scalar specifying the FDR threshold upon which to filter barcodes. Barcodes with FDR 
+#' above this threshold will not be regarded as real barcodes. This parameter is the same as \code{FDR} in STARsolo.
 #'
-#' @param round Logical scalar indicating whether to check for non-integer values in \code{m} and, if present, round them for ambient profile estimation (see \code{?\link{ambientProfileEmpty}}) and the multinomial simulations.
+#' @param round Logical scalar indicating whether to check for non-integer values in \code{m} and, if present, round them for ambient profile estimation 
+#' (see \code{?\link{ambientProfileEmpty}}) and the multinomial simulations.
+#'
 #' @param niters An integer scalar specifying the number of iterations to use for the Monte Carlo p-value calculations.
+#'
 #' @param BPPARAM A \linkS4class{BiocParallelParam} object indicating whether parallelization should be used.
 
 #' @details
-#' This function is an approximate implementation of the  \code{--soloCellFilter  EmptyDrops_CR} filtering approach of STARsolo 2.7.9a
-#' , which, itself, was reverse-engineered from the behavior of  CellRanger 3+. 
-#' All parameters are default set as the default value used in starSolo 2.7.9a.
-#' In most cases, users just need to specify the raw and unfiltered count matrix, \code{m}.
-#' See \code{?\link{emptyDrops}} for an alternative approach for cell calling.
+#' This function is an approximate implementation of the  \code{--soloCellFilter  EmptyDrops_CR} filtering approach of STARsolo 2.7.9a,
+#' which, itself, was reverse-engineered from the behavior of CellRanger 3+. 
+#' All parameters defaults are set as the same as those used in starSolo 2.7.9a.
+#' In most cases, to reproduce the default filtering behavior, users will just need to specify the raw and 
+#' unfiltered count matrix, \code{m}.  See \code{?\link{emptyDrops}} for an alternative approach for cell calling.
 #' 
 #' The main differences between \code{emptyDropsCellRanger} and \code{emptyDrops} are 
 #' 1. \code{emptyDropsCellRanger} first applies a simple filtering strategy to identify 
 #' retained cells according to the ranking of the total count of barcodes. This process is based on
-#'  \code{expected}, \code{max.percentile}, \code{max.min.ratio}, \code{umi.min}, and \code{umi.min.frac.median}. 
-#' 2. \code{emptyDropsCellRanger} takes barcodes whose total count rank within a certain range 
-#' (by default, (45,000, 90,000]) as the input of SimpleGoodTuring. So in addition to the lower 
-#' limit \code{lower}, it also has an bottom limit \code{bottom}.
-#' 3. When computing ambient profile, \code{emptyDropsCellRanger} defines a candidate pool. 
+#' the \code{expected}, \code{max.percentile}, \code{max.min.ratio}, \code{umi.min}, and '
+#' \code{umi.min.frac.median} parameters. 
+#' 2. \code{emptyDropsCellRanger} takes barcodes whose ranks, based upon total count, are within a certain range 
+#' (by default, (45,000, 90,000]) as the input of SimpleGoodTuring. So, in addition to the lower 
+#' limit \code{lower}, it also has a (potentially distinct) bottom limit \code{bottom}.
+#' 3. When computing the ambient profile, \code{emptyDropsCellRanger} defines a candidate pool. 
 #' Only the barcodes in the pool are involved in ambient profile computation and are assigned a p-value. 
-#' By default, the pool include the 20,000 barcodes whose total count rank right after the barcodes 
+#' By default, the pool include the 20,000 barcodes that are ranked (by total count) directly behind the barcodes 
 #' selected by the simple filtering strategy described above.
 #'  
 #' @return
