@@ -5,29 +5,18 @@
 #' 
 #' @param m A numeric matrix-like object containing counts, where columns represent barcoded droplets and rows represent features.
 #' The matrix should only contain barcodes for an individual sample, prior to any filtering for barcodes.
-#' @param n.expected.cells An integer scalar defines the number of expected cells in a sample. 
+#' @param n.expected.cells An integer scalar specifying the number of expected cells in a sample. 
 #' @param max.percentile A numeric scalar between 0 and 1 used to define the maximum UMI count used in the simple filtering algorithm. 
 #' @param max.min.ratio An integer scalar specifying the ratio of the maximum and minimum UMI count used in the simple filtering algorithm. 
-#' @param umi.min A numeric scalar specifying the minimum UMI count for inclusion of a barcode in the cell candidate pool. 
-#' @param umi.min.frac.median A numeric scalar between 0 and 1 used to further restrict the minimum UMI count for inclusion of a barcode in the cell candidate pool.
+#' @param umi.min An integer scalar specifying the minimum UMI count for inclusion of a barcode in the cell candidate pool. 
+#' @param umi.min.frac.median A numeric scalar between 0 and 1 used to define the minimum UMI count for inclusion of a barcode in the cell candidate pool.
 #' @param cand.max.n An integer scalar specifying the maximum number of barcodes that can be included in the cell candidate pool. 
 #' @param ind.min An integer scalar specifying the lowest UMI count ranking for inclusion of a barcode in the ambient profile. 
 #' @param ind.max An integer scalar specifying the highest UMI count ranking for inclusion of a barcode in the ambient profile. 
-#' @param round Logical scalar indicating whether to check for non-integer values in \code{m} and, if present, round them for ambient profile estimation (see \code{?\link{ambientProfileEmpty}}) and the multinomial simulations.
+#' @param round A logical scalar indicating whether to check for non-integer values in \code{m} and, if present, round them for ambient profile estimation (see \code{?\link{ambientProfileEmpty}}) and the multinomial simulations.
 #' @param niters An integer scalar specifying the number of iterations to use for the Monte Carlo p-value calculations.
 #' @param BPPARAM A \linkS4class{BiocParallelParam} object indicating whether parallelization should be used.
 #'
-#' @details
-#' This function is an approximate implementation of the \code{--soloCellFilter EmptyDrops_CR} filtering approach of STARsolo 2.7.9a+,
-#' which itself was reverse-engineered from the behavior of  CellRanger 3+. 
-#' The main differences between \code{emptyDropsCellRanger} and \code{emptyDrops} are:
-#' \itemize{
-#' \item \code{emptyDropsCellRanger} first applies a simple filtering strategy to identify some high-quality cells directly without any further investigation.
-#' \item \code{emptyDropsCellRanger} takes barcodes whose total count ranks within a certain range - by default, (45,000, 90,000] - to compute the ambient profile.
-#' While \code{emptyDrops} only defines the upper bound using \code{lower} or \code{by.rank}.
-#' \item \code{emptyDropsCellRanger} defines a cell candidate pool according to three parameters, \code{umi.min},\code{umi.min.frac.median} and \code{cand.max.n}. While in \code{emptyDrops}, this is defined by \code{lower}.
-#' }
-#' 
 #' @section Details about \code{emptyDropsCellRanger} arguments:
 #' The arguments in \pkg{STARsolo} are one-to-one correspond to the arguments in \code{emptyDropsCellRanger}:
 #' \itemize{
@@ -48,12 +37,12 @@
 #' This argument defines the minimum UMI as the UMI count of the barcodes whose UMI count ranks as the \code{cand.max.n}-th after the real cells defined by the simple filtering algorithm. 
 #' This argument is the same as \code{umiMinFracMedian} in \pkg{STARsolo}.
 #' \item \code{ind.min}: This argument specifies the lowest UMI count ranking of the barcodes in the ambient pool. 
-#' This argumen is same as \code{indMin} in \pkg{STARsolo}.
+#' This argument is same as \code{indMin} in \pkg{STARsolo}.
 #' \item \code{ind.max}: This argument specifies the highest UMI count ranking of the barcodes in the ambient pool. 
-#' This argumen is same as \code{indMin} in \pkg{STARsolo}.
+#' This argument is same as \code{indMin} in \pkg{STARsolo}.
 #' }
 #' 
-#' @section Details about \code{emptyDropsCellRanger}
+#' @section Details about \code{emptyDropsCellRanger}:
 #' \code{emptyDropsCellRanger} works on only three subsets of the barcodes in a sample. 
 #' The first subset includes barcodes that are selected by the simple filtering pipeline. 
 #' These barcodes will be regarded as high quality cells without any further filtering.
@@ -65,6 +54,15 @@
 #' This subset includes the barcodes whose number of UMI count is lower than that of the cells selected by the simple filtering algorithm and higher than the threshold defined by \code{umi.min}, \code{umi.min.frac.median} and \code{cand.max.n} together.
 #' Only the barcodes within this subset will be proceeded further to compute the deviations from the ambient profile, and then the p-value and FDR. 
 #' In other words, besides barcodes that are assigned as cells directly by the simple filtering algorithm, only the barcodes that fall in this category have the chance be selected as real cells (FDR is not \code{NAN}.).
+#' 
+#' @section Differences between \code{emptyDropsCellRanger} and \code{emptyDrops}:
+#' The main differences between \code{emptyDropsCellRanger} and \code{emptyDrops} are:
+#' \itemize{
+#' \item \code{emptyDropsCellRanger} applies a simple filtering strategy to identify some real cells before any further investigation.
+#' \item \code{emptyDropsCellRanger} takes barcodes whose total count ranks within a certain range - by default, (45,000, 90,000] - to compute the ambient profile.
+#' While \code{emptyDrops} only defines the upper bound using \code{lower} or \code{by.rank}.
+#' \item \code{emptyDropsCellRanger} defines a cell candidate pool according to three parameters, \code{umi.min},\code{umi.min.frac.median} and \code{cand.max.n}. While in \code{emptyDrops}, this is defined by \code{lower}.
+#' }
 #' 
 #' 
 #' @return
