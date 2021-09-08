@@ -56,8 +56,7 @@
 #' selected by the simple filtering strategy described above.
 #'  
 #' @return
-#' A DataFrame like \code{\link{emptyDrops}}, with an additional binary \code{is.cell} field demonstrating whether
-#' barcodes are estimated as real barcodes.
+#' A DataFrame like \code{\link{emptyDrops}}.
 #' 
 #' @author
 #' Dongze He, Rob Patro
