@@ -18,12 +18,12 @@
 #' @param BPPARAM A \linkS4class{BiocParallelParam} object indicating whether parallelization should be used.
 #'
 #' @section Details about \code{emptyDropsCellRanger} arguments:
-#' The arguments in \pkg{STARsolo} are one-to-one correspond to the arguments in \code{emptyDropsCellRanger}. All parameters defaults are set as the same as those used in STARsolo 2.7.9a.
+#' The arguments in \pkg{STARsolo} are in one-to-one correspondence with the arguments in \code{emptyDropsCellRanger}. All parameters defaults are set as the same as those used in STARsolo 2.7.9a.
 #' \itemize{
 #' \item \code{n.expected.cells}: This argument is used to define the number of expected cells in a sample. 
 #' It is the same as \code{nExpectedCells} in \pkg{STARsolo}. 
 #' \item \code{max.percentile}: Together with \code{n.expected.cells}, \code{max.percentile} defines the maximum UMI count that an expected cell can have. 
-#' This argument is same as \code{maxPercentile} in \pkg{STARsolo}. 
+#' This argument is the same as \code{maxPercentile} in \pkg{STARsolo}. 
 #' \item \code{max.min.ratio}: Based on the maximum UMI count computed using \code{n.expected.cells} and \code{max.percentile}, \code{max.min.ratio} defines the threshold of the minimum UMI count that an expected cell can have according to their ratio. 
 #' The barcodes whose UMI count is above this threshold are assigned as real cells by the simple filtering algorithm (\code{nCellsSimple} in \pkg{STARsolo}). 
 #' It is same as \code{maxMinRatio} in \pkg{STARsolo}.
@@ -52,7 +52,7 @@
 #' Real cells are expected to have significantly non-ambient profile.
 #' The third subset defines the cell candidate pool. 
 #' This subset includes the barcodes whose number of UMI count is lower than that of the cells selected by the simple filtering algorithm and higher than the threshold defined by \code{umi.min}, \code{umi.min.frac.median} and \code{cand.max.n} together.
-#' Only the barcodes within this subset will be proceeded further to compute the deviations from the ambient profile, and then the p-value and FDR. 
+#' Only the barcodes within this subset will be considered further (as potential non-empty barcodes) to compute the deviations from the ambient profile, and then the p-value and FDR. 
 #' In other words, besides barcodes that are assigned as cells directly by the simple filtering algorithm, only the barcodes that fall in this category have the chance be selected as real cells (FDR is not \code{NAN}.).
 #' 
 #' @section Differences between \code{emptyDropsCellRanger} and \code{emptyDrops}:
